@@ -6,6 +6,8 @@
 import pandas as pd
 import numpy as np
 import requests
+import datetime
+from datetime import date
 import lxml
 import csv 
 from pandas import DataFrame
@@ -60,35 +62,36 @@ usa_map_df = usa_df[usa_df['Date'] == max(usa_df['Date'])]
 states_grouped = usa_latest.groupby('Province_State')['Confirmed', 'Deaths'].sum().reset_index()
 print(states_grouped)
 # -----------------------------------------------------------------------
-# States and lat and longitude tables. Maybe can average them by state? For the weather data as well?
-# maybe just take the lat and longitude of the largest county per state? This might make the most sense.
+#______________________________________________________________________________________________________________________
+# Setting date for the weather api... importing time.. and reformatting it to what the API uses.
+today = date.today()
+oldformat = str(today)
+datetimeobject = datetime.datetime.strptime(oldformat,'%Y-%m-%d')
+newformat = datetimeobject.strftime('%d-%b-%Y')
+today_date = newformat
 
-# -----------------------------------------------------------------------
-# need to do a join on another table to get population and per capita data
 
-# need to do another join to get for recovered cases and hospitalizations
-
-# -----------------------------------------------------------------------
+# ____________________________________
 # Weather Data // can only do 500 requests per day. comment out after loading data, you don't exceed requests....
 # need to concatenate all state data frames.
-# frequency = 24
-# start_date = '1-JAN-2020'
-# end_date = '13-MAY-2020'
-# api_key = 'c136a1dee5d64cbd93251630201405'
-# location_list = ['alabama','alaska', 'arizona','arkansas','california','colorado','connecticut','delaware','district_of_columbia',
-#                  'florida','georgia','hawaii', 'idaho', 'illinois' ,'indiana', 'iowa', 'kansas', 'kentucky',
-#                  'louisiana', 'maine', 'montana', 'nebraska', 'nevada', 'new_hampshire', 'new_jersey',
-#                  'new_mexico','new_york','north_carolina','north_dakota','ohio','oklahoma','oregon','maryland','massachusetts',
-#                  'michigan','minnesota','mississippi','missouri','pennsylvania','rhode_island','south_carolina','south_dakota','tennessee',
-#                  'texas','utah','vermont','virginia','washington','west_virginia','wisconsin','wyoming']
-# hist_weather_data = retrieve_hist_data(api_key,
-#                                 location_list,
-#                                 start_date,
-#                                 end_date,
-#                                 frequency,
-#                                 location_label = True,
-#                                 export_csv = True,
-#                                 store_df = True)
+frequency = 24
+start_date = '1-JAN-2020'
+end_date = today_date
+api_key = 'c136a1dee5d64cbd93251630201405'
+location_list = ['alabama','alaska', 'arizona','arkansas','california','colorado','connecticut','delaware','district_of_columbia',
+                 'florida','georgia','hawaii', 'idaho', 'illinois' ,'indiana', 'iowa', 'kansas', 'kentucky',
+                 'louisiana', 'maine', 'montana', 'nebraska', 'nevada', 'new_hampshire', 'new_jersey',
+                 'new_mexico','new_york','north_carolina','north_dakota','ohio','oklahoma','oregon','maryland','massachusetts',
+                 'michigan','minnesota','mississippi','missouri','pennsylvania','rhode_island','south_carolina','south_dakota','tennessee',
+                 'texas','utah','vermont','virginia','washington','west_virginia','wisconsin','wyoming']
+hist_weather_data = retrieve_hist_data(api_key,
+                                location_list,
+                                start_date,
+                                end_date,
+                                frequency,
+                                location_label = True,
+                                export_csv = True,
+                                store_df = True)
 
 # creates 50 different csvs... Then From there we read 50 different csvs into pandas dataframes
 # to do data manipulation.
@@ -279,8 +282,6 @@ print(states_grouped.columns.tolist())
 print(pop_df.columns.tolist())
 # -----------------------------------------------------------------------
 
-
-# -----------------------------------------------------------------------
 # Insert whole DataFrame into MySQL, why doesn't this work? # using sqlalchemy doesn't work for somereaseon
 pop_sql = pop_df.to_sql('Population_Data', con = engine, if_exists = 'replace', chunksize = 1000)
 
@@ -307,13 +308,7 @@ my_db.commit()
 
 my_db.close()
 #--------------------------------------------------------------------------
-# should prob drop table and create a new one every time as well. to keep the most up to date.
-# cols = "`,`".join([str(i) for i in df.columns.tolist()])
-# # for i, row in df.iterrows():
-# #   print('Updating Records..........')
-# #   test_sql = "INSERT INTO `updated_data` (`" + cols + "`) VALUES (" + "%s," * (len(row) - 1) + "%s)"
-# #   cursor.execute(test_sql, tuple(row))
-# #   my_db.commit()
+# end...
 
 
 
