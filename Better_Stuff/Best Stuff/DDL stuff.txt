@@ -1,0 +1,34 @@
+create table Date_Key
+(
+	DateID INTEGER
+		primary key
+		constraint DateID_fk_TempPop
+			references TempPop (DateID),
+	Date LONGTEXT
+);
+
+create table State_Key
+(
+	StateID Integer
+		primary key
+		constraint StateID_fk_TempPop
+			references TempPop (StateID),
+	State VarChar(36),
+	Abbreviation varchar(2)
+);
+
+create table TempPop
+(
+	Temp,
+	DateID
+		references Date_Key,
+	StateID
+		references State_Key,
+	"Total Cases",
+	"Total Deaths",
+	"Active Cases",
+	"Total Cases Per 1Mill",
+	"Total Deaths Per 1Mill",
+	"Total Tests",
+	"Total Tests Per 1Mill"
+);
