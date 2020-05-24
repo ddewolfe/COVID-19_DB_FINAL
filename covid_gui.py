@@ -25,9 +25,9 @@ my_cursor = mydb.cursor(buffered=True)
 
 # testting datbase display records
 def Display():
-  my_cursor.execute("SELECT * FROM Demo")
+  my_cursor.execute("SELECT * FROM Demo1")
   all_rows = my_cursor.fetchall()
-  df = DataFrame(all_rows, columns=['Temp', 'DateID', 'StateID', 'Total_Cases', 'Total_Deaths', 'Active_Cases', 'Total_Cases_1m_Pop', 'Total_Deaths_1m_Pop' ,'Total_Tests', 'Total_Tests_1m_pop','isDeleted' ])
+  df = DataFrame(all_rows, columns=['Temperature', 'DateID', 'StateID', 'Cases', 'Deaths','isDeleted' ])
   print(df.head(10))
 
 Display()
@@ -61,22 +61,20 @@ def search_records():
       forgot.grid(row=2, column=0)
 
     if selected == "State":
-      sql_search = "SELECT * FROM Demo WHERE StateID = %s"
+      sql_search = "SELECT * FROM Demo1 WHERE StateID = %s"
 
     if selected == "Temperature":
-      sql_search = "SELECT * FROM Demo WHERE Temp = %s"
+      sql_search = "SELECT * FROM Demo1 WHERE Temperature = %s"
 
     if selected == "Date":
-      sql_search = "SELECT * FROM Demo WHERE DateID = %s"
+      sql_search = "SELECT * FROM Demo1 WHERE DateID = %s"
 
 
     # sql_search = "SELECT * FROM Demo WHERE StateID = %s"
     name = (searched, )
     results = my_cursor.execute(sql_search, name)
     results = my_cursor.fetchall()
-    results_df = DataFrame(results, columns=['Temp', 'DateID', 'StateID', 'Total_Cases', 'Total_Deaths', 'Active_Cases',
-                                    'Total_Cases_1m_Pop', 'Total_Deaths_1m_Pop', 'Total_Tests', 'Total_Tests_1m_pop',
-                                    'isDeleted'])
+    results_df = DataFrame(results, columns=['Temperature', 'DateID', 'StateID', 'Cases', 'Deaths','isDeleted' ])
     new_results = results_df.head(50)
     if not results:
       result = "Record Not Found......."
@@ -110,12 +108,10 @@ def list_records():
   list_records_query.title('COVID-19 Database Records')
 
   # query db
-  my_cursor.execute("SELECT * FROM Demo")
+  my_cursor.execute("SELECT * FROM Demo1")
   # result = my_cursor.fetchall()
   all_rows = my_cursor.fetchall()
-  df = DataFrame(all_rows, columns=['Temp', 'DateID', 'StateID', 'Total_Cases', 'Total_Deaths', 'Active_Cases',
-                                    'Total_Cases_1m_Pop', 'Total_Deaths_1m_Pop', 'Total_Tests', 'Total_Tests_1m_pop',
-                                    'isDeleted'])
+  df = DataFrame(all_rows, columns=['Temperature', 'DateID', 'StateID', 'Cases', 'Deaths', 'isDeleted'])
   results = df.head(50)
   lookup_label = Label(list_records_query, text = results )
   lookup_label.pack()
@@ -148,7 +144,7 @@ def delete_records():
   delete_vals = delete_val1 +','+delete_val2
 
   def delete_records_now():
-    my_cursor.execute("UPDATE Demo SET isDeleted = 1  WHERE isDeleted = 0  AND DateID = %s AND StateID = %s",[(delete_val1), (delete_val2)])
+    my_cursor.execute("UPDATE Demo1 SET isDeleted = 1  WHERE isDeleted = 0  AND DateID = %s AND StateID = %s",[(delete_val1), (delete_val2)])
     mydb.commit()
 
   delete_button = Button(delete_records, text="Delete Record", command=delete_records_now)
@@ -253,7 +249,7 @@ def create_records():
   save_record = Button(create_records_query, text="Save Record")
   save_record.grid(row=20 + 15, column=0, padx=10, pady=10)
 
-  sql_command_new = "INSERT INTO Demo(Temp, DateID, StateID, Total_Cases, Total_Deaths, Active_Cases,Total_Cases_1m_POP, Total_Deaths_1m_POP, Total_Tests, Total_Tests_1m_pop,isDeleted)VALUES('%s', '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s')"
+  sql_command_new = "INSERT INTO Demo1(Temperature, DateID, StateID, Cases, Deaths,isDeleted)VALUES('%s', '%s', '%s', '%s','%s','%s')"
 
   values_new = (tempvals,datevals, statevals,casevals,deathvals , activevals, case1mvals ,death1mvals,testsvals, tests1mvals , 0)
 
