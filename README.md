@@ -8,7 +8,7 @@
 
 ## Gui issuses
 - we broke our db super last min and  had to change up the tables
-- search and display work everything is in pieces
+- search and display work everything else is in pieces
 ## sources 
 - https://datatofish.com/import-csv-sql-server-python/
 - https://www.kaggle.com/imdevskp/covid-19-analysis-visualization-comparisons
