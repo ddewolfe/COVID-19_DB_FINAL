@@ -167,7 +167,6 @@ def create_records():
   create_records_query = Tk()
   create_records_query.geometry("400x500")
   create_records_query.title('Add Database Records')
-  return
 
   # Temperature
   Temp_box = Entry(create_records_query)
@@ -238,16 +237,34 @@ def create_records():
   tests_1m_box_label.grid(row=18, column=0, padx=10, pady=10)
   # is deleted just equals false....
 
+  tempvals = Temp_box.get()
+  datevals = Date_box.get()
+  statevals = State_box.get()
+  casevals = cases_box.get()
+  deathvals = deaths_box.get()
+  activevals = activecases_box.get()
+  case1mvals = cases_1m_box.get()
+  death1mvals = deaths_1m_box.get()
+  testsvals = tests_box.get()
+  tests1mvals = tests_1m_box.get()
+
 
 
   save_record = Button(create_records_query, text="Save Record")
   save_record.grid(row=20 + 15, column=0, padx=10, pady=10)
 
-  sql_command_new = "INSERT INTO Demo(Temp, DateID, StateID, Total_Cases, Total_Deaths, Active_Cases,Total_Cases_1m_POP, Total_Deaths_1m_POP, Total_Tests, Total_Tests_1m_pop,isDeleted)VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+  sql_command_new = "INSERT INTO Demo(Temp, DateID, StateID, Total_Cases, Total_Deaths, Active_Cases,Total_Cases_1m_POP, Total_Deaths_1m_POP, Total_Tests, Total_Tests_1m_pop,isDeleted)VALUES('%s', '%s', '%s', '%s','%s','%s','%s','%s','%s','%s','%s')"
 
-  values_new = (Temp_box.get(), Date_box.get(), State_box.get(), cases_box.get(), deaths_box.get(), activecases_box.get(), cases_1m_box.get(),deaths_1m_box.get(),tests_box.get(),tests_1m_box.get(), '0')
+  values_new = (tempvals,datevals, statevals,casevals,deathvals , activevals, case1mvals ,death1mvals,testsvals, tests1mvals , 0)
+
+ # my_cursor.execute(sql_command_new, values_new)
+
+
+  #sql_command = "INSERT INTO Demo(Temp, DateID, StateID, Total_Cases, Total_Deaths, Active_Cases,Total_Cases_1m_POP, Total_Deaths_1m_POP, Total_Tests, Total_Tests_1m_pop,isDeleted) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
 
   my_cursor.execute(sql_command_new, values_new)
+
 
   # Commit the changes to the database
   mydb.commit()
